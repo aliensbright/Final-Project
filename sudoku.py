@@ -11,7 +11,7 @@ import math
 
 win=tk.Tk()
 win.config(bg="#000000")
-variablevalues=ogvalues=[0,8,0,0,0,0,0,3,0,2,0,0,6,0,7,0,0,1,0,0,0,0,0,0,0,0,0,0,6,0,2,0,1,0,7,0,5,0,0,0,0,0,0,0,3,9,0,0,7,0,5,0,0,8,4,0,1,3,0,9,7,0,6,0,2,0,0,0,0,0,1,0,8,0,3,1,0,6,5,0,9]
+ogvalues=[0,8,0,0,0,0,0,3,0,2,0,0,6,0,7,0,0,1,0,0,0,0,0,0,0,0,0,0,6,0,2,0,1,0,7,0,5,0,0,0,0,0,0,0,3,9,0,0,7,0,5,0,0,8,4,0,1,3,0,9,7,0,6,0,2,0,0,0,0,0,1,0,8,0,3,1,0,6,5,0,9]
 checkbutton=tk.Button(text='Check')
 Title=Label(text='Sudoku')
 board=[]
@@ -37,8 +37,21 @@ def boardsetup(values,board):
         bored.grid(row=y,column=x,padx=(0,vert),pady=(0,horz))
  
 def checkAnswer(event):
-    global variablevalues
-
+    global board
+    variableValues=[]
+    for square in board:
+        try:
+            x=square.get()
+            x=int(x)
+            variableValues.append(x)
+        except:
+            try:
+                x=square.cget('text')
+                x=int(x)
+                variableValues.append(x)
+            except:
+                pass
+    print(len(variableValues))
     
 
 #0,8,0,0,0,0,0,3,0
@@ -51,4 +64,5 @@ def checkAnswer(event):
 #0,2,0,0,0,0,0,1,0
 #8,0,3,1,0,6,5,0,9
 boardsetup(ogvalues,board)
+checkbutton.bind('<Button>',checkAnswer)
 win.mainloop()
