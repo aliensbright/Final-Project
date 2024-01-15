@@ -15,6 +15,7 @@ ogvalues=[0,8,0,0,0,0,0,3,0,2,0,0,6,0,7,0,0,1,0,0,0,0,0,0,0,0,0,0,6,0,2,0,1,0,7,
 checkbutton=tk.Button(text='Check')
 Title=Label(text='Sudoku')
 board=[]
+list_of_lines_or_board_squares=((0,9,18,27,36,45,54,63,72),(1,10,19,28,37,46,55,64,73),(2,11,20,29,38,47,56,65,74),(3,12,21,30,29,48,57,66,75),(4,13,)
 Title.grid(row=0,column=0,columnspan=10)
 checkbutton.grid(row=0,column=7,columnspan=3)
 
@@ -42,12 +43,14 @@ def getGridValues(board):
         try:
             x=square.get()
             x=int(x)
+            assert 1<=x<=9
             variableValues.append(x)
         except:
             try:
                 x=square.cget('text')
                 x=int(x)
                 variableValues.append(x)
+                assert 1<=x<=9
             except:
                 print('Please finish the grid')
                 break
@@ -60,16 +63,22 @@ def getGridValues(board):
 def checkAnswer(event):
     global board
     variableBoard=getGridValues(board)
-    lineOrBox=[]
+    horline=[]
+    
     if variableBoard==None:
         pass
     else:
-        pass
+
+
 
         
 def sortLists9(_9values): #type list
     _9values.sort()
     goodList=(1,2,3,4,5,6,7,8,9)
+    if _9values==goodList:
+        return True
+    else:
+        return False
 
 
 '''
