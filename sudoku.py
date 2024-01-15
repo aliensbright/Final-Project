@@ -36,8 +36,7 @@ def boardsetup(values,board):
             horz=4
         bored.grid(row=y,column=x,padx=(0,vert),pady=(0,horz))
  
-def checkAnswer(event):
-    global board
+def getGridValues(board):
     variableValues=[]
     for square in board:
         try:
@@ -50,19 +49,46 @@ def checkAnswer(event):
                 x=int(x)
                 variableValues.append(x)
             except:
-                pass
-    print(len(variableValues))
+                print('Please finish the grid')
+                break
+    if len(variableValues)==81:
+        return variableValues
+    else:
+        return None
     
+    
+def checkAnswer(event):
+    global board
+    variableBoard=getGridValues(board)
+    lineOrBox=[]
+    if variableBoard==None:
+        pass
+    else:
+        pass
 
-#0,8,0,0,0,0,0,3,0
-#2,0,0,6,0,7,0,0,1
-#0,0,0,0,0,0,0,0,0
-#0,6,0,2,0,1,0,7,0
-#5,0,0,0,0,0,0,0,3
-#9,0,0,7,0,5,0,0,8
-#4,0,1,3,0,9,7,0,6
-#0,2,0,0,0,0,0,1,0
-#8,0,3,1,0,6,5,0,9
+        
+def sortLists9(_9values): #type list
+    _9values.sort()
+    goodList=(1,2,3,4,5,6,7,8,9)
+
+
+'''
+for i in range 9:
+    lineOrBox.append(variableboard%9+i)
+( 0,9,18,27,36,45,54,63,72)
+(1,10,19,28,37,46,55,64,73)
+
+'''
+
+#0,8,0,0,0,0,0,3,0 
+#2,0,0,6,0,7,0,0,1 
+#0,0,0,0,0,0,0,0,0 
+#0,6,0,2,0,1,0,7,0 
+#5,0,0,0,0,0,0,0,3 
+#9,0,0,7,0,5,0,0,8 
+#4,0,1,3,0,9,7,0,6 
+#0,2,0,0,0,0,0,1,0 
+#8,0,3,1,0,6,5,0,9 
 boardsetup(ogvalues,board)
 checkbutton.bind('<Button>',checkAnswer)
 win.mainloop()
