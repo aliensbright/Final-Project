@@ -15,9 +15,32 @@ ogvalues=[0,8,0,0,0,0,0,3,0,2,0,0,6,0,7,0,0,1,0,0,0,0,0,0,0,0,0,0,6,0,2,0,1,0,7,
 checkbutton=tk.Button(text='Check')
 Title=Label(text='Sudoku')
 board=[]
-list_of_lines_or_board_squares=((0,9,18,27,36,45,54,63,72),(1,10,19,28,37,46,55,64,73),(2,11,20,29,38,47,56,65,74),(3,12,21,30,29,48,57,66,75),(4,13,)
+horLine=[]
+list_of_lines_or_board_squares=[]
 Title.grid(row=0,column=0,columnspan=10)
 checkbutton.grid(row=0,column=7,columnspan=3)
+
+def lines():
+    global horLine
+    global list_of_lines_or_board_squares
+    for multiple in range(9):
+        for modVal in range(9):
+            horLine.append(multiple*9+modVal)
+        list_of_lines_or_board_squares.append(horLine)
+        horLine=[]
+    for multiple in range(9):
+        for modVal in range(9):
+            horLine.append(modVal*9+multiple)
+        list_of_lines_or_board_squares.append(horLine)
+        horLine=[]
+    for xBox in range(3):
+        for yBox in range(3):
+            for multiple in range(3*yBox,3*yBox+3):
+                for modVal in range(3*xBox,3*xBox+3):
+                    horLine.append(modVal*9+multiple)
+            list_of_lines_or_board_squares.append(horLine)
+            horLine=[]
+
 
 def boardsetup(values,board):
     for num in values:
@@ -30,13 +53,12 @@ def boardsetup(values,board):
         y=math.floor((board.index(bored)/9))+1
         vert=0
         horz=0
-        print(x,y,bored)
         if x%3==0:
             vert=4
         if y%3==0:
             horz=4
         bored.grid(row=y,column=x,padx=(0,vert),pady=(0,horz))
- 
+
 def getGridValues(board):
     variableValues=[]
     for square in board:
@@ -52,7 +74,7 @@ def getGridValues(board):
                 variableValues.append(x)
                 assert 1<=x<=9
             except:
-                print('Please finish the grid')
+                print('Please finish the grid with values from 1 - 9')
                 break
     if len(variableValues)==81:
         return variableValues
@@ -62,15 +84,21 @@ def getGridValues(board):
     
 def checkAnswer(event):
     global board
+    global list_of_lines_or_board_squares
     variableBoard=getGridValues(board)
-    horline=[]
-    
+    horLine=[]
+    check=True
     if variableBoard==None:
         pass
     else:
-
-
-
+        while check==True:
+            for line in list_of_lines_or_board_squares:
+                for box in line:
+                    horLine.append(variableBoard[box])
+                check=sortLists9(horLine)
+                horLine=[]
+        print('Incorrect, Please try again')
+        
         
 def sortLists9(_9values): #type list
     _9values.sort()
@@ -79,15 +107,8 @@ def sortLists9(_9values): #type list
         return True
     else:
         return False
+lines()
 
-
-'''
-for i in range 9:
-    lineOrBox.append(variableboard%9+i)
-( 0,9,18,27,36,45,54,63,72)
-(1,10,19,28,37,46,55,64,73)
-
-'''
 
 #0,8,0,0,0,0,0,3,0 
 #2,0,0,6,0,7,0,0,1 
