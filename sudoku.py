@@ -16,22 +16,22 @@ for windowthings in range(1):
     win.geometry("230x230")
     win.resizable(False,False)
     checkbutton=tk.Button(text='Check')
-    Title=Label(text='Sudoku')
     board=[]
     horLine=[]
     list_of_lines_or_board_squares=[]
-    Title.grid(row=0,column=0,columnspan=10)
-    checkbutton.grid(row=0,column=7,columnspan=3)
-
-title=tk.Label(text='SUDOKU')
-button_setBoard=tk.Button(text='SET YOUR\nOWN GRID!')
-button_ranBoard=tk.Button(text='PLAY\nRANDOM!')
-title.place(y=20,x=90)
-button_setBoard.place(y=100,x=30)
-button_ranBoard.place(y=100,x=130)
+    ogvalues=[]
+    title=tk.Label(text='SUDOKU')
+    button_setBoard=tk.Button(text='SET YOUR\nOWN GRID!')
+    button_ranBoard=tk.Button(text='PLAY\nRANDOM!')
+    title.place(y=20,x=90)
+    button_setBoard.place(y=100,x=30)
+    button_ranBoard.place(y=100,x=130)
 
 def createSeed(event):
     global ogvalues
+    button_setBoard.destroy()
+    button_ranBoard.destroy()
+    title.destroy()
     for blank in range(81):
         board.append(tk.Entry(justify=CENTER,width=3,borderwidth=2,relief=RIDGE))
     for bored in board:
@@ -47,6 +47,9 @@ def createSeed(event):
 
 def getSeed(event):
     global ogvalues
+    button_setBoard.destroy()
+    button_ranBoard.destroy()
+    title.destroy()
     s1=(0,8,0,0,0,0,0,3,0,2,0,0,6,0,7,0,0,1,0,0,0,0,0,0,0,0,0,0,6,0,2,0,1,0,7,0,5,0,0,0,0,0,0,0,3,9,0,0,7,0,5,0,0,8,4,0,1,3,0,9,7,0,6,0,2,0,0,0,0,0,1,0,8,0,3,1,0,6,5,0,9)
     s2=(3,0,0,8,0,1,0,0,2,2,0,1,0,3,0,6,0,4,0,0,0,2,0,4,0,0,0,8,0,9,0,0,0,1,0,6,0,6,0,0,0,0,0,5,0,7,0,2,0,0,0,4,0,9,0,0,0,5,0,9,0,0,0,9,0,4,0,8,0,7,0,5,6,0,0,1,0,7,0,0,3)
     s3=(5,3,0,0,7,0,0,0,0,6,0,0,1,9,5,0,0,0,0,9,8,0,0,0,0,6,0,8,0,0,0,6,0,0,0,3,4,0,0,8,0,3,0,0,1,7,0,0,0,2,0,0,0,6,0,6,0,0,0,0,2,8,0,0,0,0,4,1,9,0,0,5,0,0,0,0,8,0,0,7,9)
@@ -60,6 +63,7 @@ def getSeed(event):
     seedList=[s1,s2,s3,s4,s5,s6,s7,s8,s9,s0]
     x=random.randint(0,9)
     ogvalues=seedList[x]
+    boardsetup(board)
 
 def lines():
     global horLine
@@ -133,7 +137,7 @@ def checkAnswer(event):
     horLine=[]
     check=True
     if variableBoard==None:
-        pass
+        print('ih')
     else:
         while check==True:
             for line in list_of_lines_or_board_squares:
@@ -151,11 +155,10 @@ def sortLists9(_9values):
     else:
         return False
 
+
+
 lines()
-
-boardsetup(board)
-button_setBoard.bind('<Button',createSeed)
-button_ranBoard.bind('<Button',getSeed)
+button_setBoard.bind('<Button>',createSeed)
+button_ranBoard.bind('<Button>',getSeed)
 checkbutton.bind('<Button>',checkAnswer)
-
 win.mainloop()
