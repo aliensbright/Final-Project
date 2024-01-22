@@ -15,28 +15,30 @@ for windowthings in range(1):
     win.config(bg="#000000")
     win.geometry("230x230")
     win.resizable(False,False)
-    checkbutton=tk.Button(text='Check')
+    checkbutton=tk.Button(win,text='Check')
+    saveButton=tk.Button(win,text='Save')
     board=[]
+    boardCreate=[]
     horLine=[]
     list_of_lines_or_board_squares=[]
     ogvalues=[]
-    title=tk.Label(text='SUDOKU')
-    button_setBoard=tk.Button(text='SET YOUR\nOWN GRID!')
-    button_ranBoard=tk.Button(text='PLAY\nRANDOM!')
+    title=tk.Label(win,text='SUDOKU')
+    button_setBoard=tk.Button(win,text='SET YOUR\nOWN GRID!')
+    button_ranBoard=tk.Button(win,text='PLAY\nRANDOM!')
     title.place(y=20,x=90)
     button_setBoard.place(y=100,x=30)
     button_ranBoard.place(y=100,x=130)
+    Title=Label(win,text='Sudoku')
 
 def createSeed(event):
-    global ogvalues
     button_setBoard.destroy()
     button_ranBoard.destroy()
     title.destroy()
     for blank in range(81):
-        board.append(tk.Entry(justify=CENTER,width=3,borderwidth=2,relief=RIDGE))
-    for bored in board:
-        x=(board.index(bored))%9+1
-        y=math.floor((board.index(bored)/9))+1
+        boardCreate.append(tk.Entry(win,justify=CENTER,width=3,borderwidth=2,relief=RIDGE))
+    for bored in boardCreate:
+        x=(boardCreate.index(bored))%9+1
+        y=math.floor((boardCreate.index(bored)/9))+1
         vert=0
         horz=0
         if x%3==0:
@@ -44,6 +46,20 @@ def createSeed(event):
         if y%3==0:
             horz=4
         bored.grid(row=y,column=x,padx=(0,vert),pady=(0,horz))
+    saveButton.grid(row=10,column=4,columnspan=3)
+
+def saveCreatedSeed(event):
+    global ogvalues
+    for i in range(81):
+        x=boardCreate[i].cget('text')
+        if x=='':
+            x=0
+        ogvalues.append(x)
+        x=''
+        boardCreate[i].destroy()
+    saveButton.destroy()
+    print(ogvalues,'hi')
+    boardsetup(boardCreate)
 
 def getSeed(event):
     global ogvalues
@@ -88,16 +104,15 @@ def lines():
 
 def boardsetup(board):
     global ogvalues
-    checkbutton=tk.Button(text='Check')
-    Title=Label(text='Sudoku')
-    Title.grid(row=0,column=0,columnspan=10)
-    checkbutton.grid(row=0,column=7,columnspan=3)
     for num in ogvalues:
-        if num!=0:
-            board.append(tk.Label(text=num,relief=RIDGE,width=2,bg='#ffffff',border=2,height=1,fg='#0000ff'))
-        else:
-            board.append(tk.Entry(justify=CENTER,width=3,borderwidth=2,relief=RIDGE))
+        try:
+            assert 1<num<9
+            assert type(num)==int
+            board.append(tk.Label(win,text=num,relief=RIDGE,width=2,bg='#ffffff',border=2,height=1,fg='#0000ff'))
+        except:
+            board.append(tk.Entry(win,justify=CENTER,width=3,borderwidth=2,relief=RIDGE))
     for bored in board:
+        print(board)
         x=(board.index(bored))%9+1
         y=math.floor((board.index(bored)/9))+1
         vert=0
@@ -107,6 +122,8 @@ def boardsetup(board):
         if y%3==0:
             horz=4
         bored.grid(row=y,column=x,padx=(0,vert),pady=(0,horz))
+    checkbutton.grid(row=0,column=7,columnspan=3)
+    Title.grid(row=0,column=0,columnspan=10)
 
 def getGridValues(board):
     variableValues=[]
@@ -137,7 +154,7 @@ def checkAnswer(event):
     horLine=[]
     check=True
     if variableBoard==None:
-        print('ih')
+        pass
     else:
         while check==True:
             for line in list_of_lines_or_board_squares:
@@ -158,6 +175,7 @@ def sortLists9(_9values):
 
 
 lines()
+saveButton.bind('<Button>',saveCreatedSeed)
 button_setBoard.bind('<Button>',createSeed)
 button_ranBoard.bind('<Button>',getSeed)
 checkbutton.bind('<Button>',checkAnswer)
