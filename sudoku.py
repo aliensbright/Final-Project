@@ -9,14 +9,16 @@ from tkinter import *
 from tkinter import ttk
 import math
 import random
+import time
 
 for windowthings in range(1):
     win=tk.Tk()
     win.config(bg="#000000")
     win.geometry("230x230")
     win.resizable(False,False)
-    checkbutton=tk.Button(win,text='Check')
-    saveButton=tk.Button(win,text='Save')
+    boardframe=tk.Frame(bg="#000000")
+    checkbutton=tk.Button(boardframe,text='Check')
+    saveButton=tk.Button(text='Save')
     board=[]
     boardCreate=[]
     horLine=[]
@@ -25,8 +27,9 @@ for windowthings in range(1):
     title=tk.Label(win,text='SUDOKU')
     button_setBoard=tk.Button(win,text='SET YOUR\nOWN GRID!')
     button_ranBoard=tk.Button(win,text='PLAY\nRANDOM!')
-    Title=Label(win,text='Sudoku')
+    Title=Label(boardframe,text='Sudoku')
     YouWin=Label(win,font=("Arial", 25),text='YOU \nWIN!!')
+    play_again=tk.Button(text='Play again?')
 
 def startgame():
     title.place(y=20,x=90)
@@ -35,9 +38,9 @@ def startgame():
 
 
 def createSeed(event):
-    button_setBoard.destroy()
-    button_ranBoard.destroy()
-    title.destroy()
+    button_setBoard.place_forget()
+    button_ranBoard.place_forget()
+    title.place_forget()
     for blank in range(81):
         boardCreate.append(tk.Entry(win,justify=CENTER,width=3,borderwidth=2,relief=RIDGE))
     for bored in boardCreate:
@@ -64,16 +67,16 @@ def saveCreatedSeed(event):
         ogvalues.append(x)
         x=''
         boardCreate[i].destroy()
-    saveButton.destroy()
+    saveButton.grid_forget()
     print(ogvalues,'hi')
     print(board)
     boardsetup(board,ogvalues)
 
 def getSeed(event):
     global ogvalues
-    button_setBoard.destroy()
-    button_ranBoard.destroy()
-    title.destroy()
+    button_setBoard.place_forget()
+    button_ranBoard.place_forget()
+    title.place_forget()
     s1=(0,8,0,0,0,0,0,3,0,2,0,0,6,0,7,0,0,1,0,0,0,0,0,0,0,0,0,0,6,0,2,0,1,0,7,0,5,0,0,0,0,0,0,0,3,9,0,0,7,0,5,0,0,8,4,0,1,3,0,9,7,0,6,0,2,0,0,0,0,0,1,0,8,0,3,1,0,6,5,0,9)
     s2=(3,0,0,8,0,1,0,0,2,2,0,1,0,3,0,6,0,4,0,0,0,2,0,4,0,0,0,8,0,9,0,0,0,1,0,6,0,6,0,0,0,0,0,5,0,7,0,2,0,0,0,4,0,9,0,0,0,5,0,9,0,0,0,9,0,4,0,8,0,7,0,5,6,0,0,1,0,7,0,0,3)
     s3=(5,3,0,0,7,0,0,0,0,6,0,0,1,9,5,0,0,0,0,9,8,0,0,0,0,6,0,8,0,0,0,6,0,0,0,3,4,0,0,8,0,3,0,0,1,7,0,0,0,2,0,0,0,6,0,6,0,0,0,0,2,8,0,0,0,0,4,1,9,0,0,5,0,0,0,0,8,0,0,7,9)
@@ -87,6 +90,7 @@ def getSeed(event):
     seedList=[s1,s2,s3,s4,s5,s6,s7,s8,s9,s0]
     x=random.randint(0,9)
     ogvalues=seedList[x]
+    ogvalues=[1,2,3,4,5,6,7,8,9,4,5,6,7,8,9,1,2,3,7,8,9,1,2,3,4,5,6,2,3,1,5,6,4,8,9,7,5,6,4,8,9,7,2,3,1,8,9,7,2,3,1,5,6,4,3,1,2,6,4,5,9,7,8,6,4,5,9,7,8,3,1,2,9,7,8,3,1,2,6,4,5]
     boardsetup(board,ogvalues)
 
 def lines():
@@ -111,13 +115,15 @@ def lines():
             horLine=[]
 
 def boardsetup(board,ogvalues):
+    global start_time
+    boardframe.grid(row=1,column=1)
     for num in ogvalues:
         try:
             assert 1<=num<=9
             assert type(num)==int
-            board.append(tk.Label(win,text=num,relief=RIDGE,width=2,bg='#ffffff',border=2,height=1,fg='#0000ff'))
+            board.append(tk.Label(boardframe,text=num,relief=RIDGE,width=2,bg='#ffffff',border=2,height=1,fg='#0000ff'))
         except:
-            board.append(tk.Entry(win,justify=CENTER,width=3,borderwidth=2,relief=RIDGE))
+            board.append(tk.Entry(boardframe,justify=CENTER,width=3,borderwidth=2,relief=RIDGE))
     for bored in board:
         x=(board.index(bored))%9+1
         y=math.floor((board.index(bored)/9))+1
@@ -128,6 +134,7 @@ def boardsetup(board,ogvalues):
         if y%3==0:
             horz=4
         bored.grid(row=y,column=x,padx=(0,vert),pady=(0,horz))
+    start_time=time.time()
     checkbutton.grid(row=0,column=7,columnspan=3)
     Title.grid(row=0,column=0,columnspan=10)
 
@@ -156,6 +163,7 @@ def getGridValues(board):
 def checkAnswer(event):
     global board
     global list_of_lines_or_board_squares
+    global start_time
     variableBoard=getGridValues(board)
     horLine=[]
     check=True
@@ -175,13 +183,20 @@ def checkAnswer(event):
             print('Incorrect, Please try again')
         else:
             print('Correct, You Win')
-            for i in board:
-                i.destroy()
-            Title.destroy()
-            checkbutton.destroy()
+            boardframe.grid_forget()
+            board=[]
             YouWin.place(x=70,y=75)
-            
-                
+            final_timeMins=math.floor(round(time.time()-start_time,0)/60)
+            final_timeSecs=int(round(time.time()-start_time,0)-60*final_timeMins)
+            print(f'Time: {final_timeMins}:{final_timeSecs}')
+            play_again.place(x=70,y=175)
+
+def playAgain(event):
+    YouWin.destroy()
+    play_again.destroy()
+    startgame()
+
+
 def sortLists9(_9values): 
     _9values.sort()
     goodList=[1,2,3,4,5,6,7,8,9]
@@ -191,12 +206,11 @@ def sortLists9(_9values):
         return False
 
 
-
 lines()
 startgame()
 saveButton.bind('<Button>',saveCreatedSeed)
 button_setBoard.bind('<Button>',createSeed)
 button_ranBoard.bind('<Button>',getSeed)
 checkbutton.bind('<Button>',checkAnswer)
-
+play_again.bind('<Button>',playAgain)
 win.mainloop()
