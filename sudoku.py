@@ -14,8 +14,7 @@ import time
 for windowthings in range(1):
     win=tk.Tk()
     win.config(bg="#000000")
-    win.geometry("230x230")
-    win.resizable(False,False)
+    win.geometry("250x230")
     boardframe=tk.Frame(bg="#000000")
     checkbutton=tk.Button(boardframe,text='Check')
     saveButton=tk.Button(text='Save')
@@ -36,11 +35,12 @@ def startgame():
     button_setBoard.place(y=100,x=30)
     button_ranBoard.place(y=100,x=130)
 
-
 def createSeed(event):
     button_setBoard.place_forget()
     button_ranBoard.place_forget()
     title.place_forget()
+    global boardCreate
+    boardCreate=[]
     for blank in range(81):
         boardCreate.append(tk.Entry(win,justify=CENTER,width=3,borderwidth=2,relief=RIDGE))
     for bored in boardCreate:
@@ -56,21 +56,20 @@ def createSeed(event):
     saveButton.grid(row=10,column=4,columnspan=3)
 
 def saveCreatedSeed(event):
-    print(boardCreate,'hello')
+    global ogvalues
+    global boardCreate
     for i in range(81):
         x=boardCreate[i].get()
         if x=='':
             x=0
-            print(x)
         else:
             x=int(x)
         ogvalues.append(x)
         x=''
-        boardCreate[i].destroy()
+        boardCreate[i].grid_forget()
     saveButton.grid_forget()
-    print(ogvalues,'hi')
-    print(board)
     boardsetup(board,ogvalues)
+    ogvalues=[]
 
 def getSeed(event):
     global ogvalues
@@ -90,7 +89,7 @@ def getSeed(event):
     seedList=[s1,s2,s3,s4,s5,s6,s7,s8,s9,s0]
     x=random.randint(0,9)
     ogvalues=seedList[x]
-    ogvalues=[1,2,3,4,5,6,7,8,9,4,5,6,7,8,9,1,2,3,7,8,9,1,2,3,4,5,6,2,3,1,5,6,4,8,9,7,5,6,4,8,9,7,2,3,1,8,9,7,2,3,1,5,6,4,3,1,2,6,4,5,9,7,8,6,4,5,9,7,8,3,1,2,9,7,8,3,1,2,6,4,5]
+    #ogvalues=[1,2,3,4,5,6,7,8,9,4,5,6,7,8,9,1,2,3,7,8,9,1,2,3,4,5,6,2,3,1,5,6,4,8,9,7,5,6,4,8,9,7,2,3,1,8,9,7,2,3,1,5,6,4,3,1,2,6,4,5,9,7,8,6,4,5,9,7,8,3,1,2,9,7,8,3,1,2,6,4,5]
     boardsetup(board,ogvalues)
 
 def lines():
@@ -116,7 +115,8 @@ def lines():
 
 def boardsetup(board,ogvalues):
     global start_time
-    boardframe.grid(row=1,column=1)
+    tk.Label(text='     ',bg="#000000").grid(row=1,column=1)
+    boardframe.grid(row=1,column=2,rowspan=10,columnspan=9)
     for num in ogvalues:
         try:
             assert 1<=num<=9
@@ -192,10 +192,9 @@ def checkAnswer(event):
             play_again.place(x=70,y=175)
 
 def playAgain(event):
-    YouWin.destroy()
-    play_again.destroy()
+    YouWin.place_forget()
+    play_again.place_forget()
     startgame()
-
 
 def sortLists9(_9values): 
     _9values.sort()
