@@ -58,6 +58,7 @@ def createSeed(event):
 def saveCreatedSeed(event):
     global ogvalues
     global boardCreate
+    ogvalues=[]
     for i in range(81):
         x=boardCreate[i].get()
         if x=='':
@@ -68,14 +69,16 @@ def saveCreatedSeed(event):
         x=''
         boardCreate[i].grid_forget()
     saveButton.grid_forget()
-    boardsetup(board,ogvalues)
+    boardsetup(ogvalues)
     ogvalues=[]
 
 def getSeed(event):
     global ogvalues
+    global board
     button_setBoard.place_forget()
     button_ranBoard.place_forget()
     title.place_forget()
+    ogvalues=[]
     s1=(0,8,0,0,0,0,0,3,0,2,0,0,6,0,7,0,0,1,0,0,0,0,0,0,0,0,0,0,6,0,2,0,1,0,7,0,5,0,0,0,0,0,0,0,3,9,0,0,7,0,5,0,0,8,4,0,1,3,0,9,7,0,6,0,2,0,0,0,0,0,1,0,8,0,3,1,0,6,5,0,9)
     s2=(3,0,0,8,0,1,0,0,2,2,0,1,0,3,0,6,0,4,0,0,0,2,0,4,0,0,0,8,0,9,0,0,0,1,0,6,0,6,0,0,0,0,0,5,0,7,0,2,0,0,0,4,0,9,0,0,0,5,0,9,0,0,0,9,0,4,0,8,0,7,0,5,6,0,0,1,0,7,0,0,3)
     s3=(5,3,0,0,7,0,0,0,0,6,0,0,1,9,5,0,0,0,0,9,8,0,0,0,0,6,0,8,0,0,0,6,0,0,0,3,4,0,0,8,0,3,0,0,1,7,0,0,0,2,0,0,0,6,0,6,0,0,0,0,2,8,0,0,0,0,4,1,9,0,0,5,0,0,0,0,8,0,0,7,9)
@@ -89,8 +92,9 @@ def getSeed(event):
     seedList=[s1,s2,s3,s4,s5,s6,s7,s8,s9,s0]
     x=random.randint(0,9)
     ogvalues=seedList[x]
-    #ogvalues=[1,2,3,4,5,6,7,8,9,4,5,6,7,8,9,1,2,3,7,8,9,1,2,3,4,5,6,2,3,1,5,6,4,8,9,7,5,6,4,8,9,7,2,3,1,8,9,7,2,3,1,5,6,4,3,1,2,6,4,5,9,7,8,6,4,5,9,7,8,3,1,2,9,7,8,3,1,2,6,4,5]
-    boardsetup(board,ogvalues)
+    ogvalues=[1,2,0,4,5,6,7,8,9,4,5,6,7,8,9,1,2,3,0,8,9,1,2,3,4,5,6,2,3,1,5,6,4,8,0,7,5,6,4,8,9,7,2,3,1,8,9,7,2,3,1,5,6,4,3,1,2,6,4,5,9,7,8,6,4,5,9,7,8,3,1,2,9,7,8,3,1,2,6,4,5]
+    board=boardsetup(ogvalues)
+    ogvalues=[]
 
 def lines():
     global horLine
@@ -113,20 +117,21 @@ def lines():
             list_of_lines_or_board_squares.append(horLine)
             horLine=[]
 
-def boardsetup(board,ogvalues):
+def boardsetup(values):
     global start_time
     tk.Label(text='     ',bg="#000000").grid(row=1,column=1)
     boardframe.grid(row=1,column=2,rowspan=10,columnspan=9)
-    for num in ogvalues:
+    boardth=[]
+    for num in values:
         try:
             assert 1<=num<=9
             assert type(num)==int
-            board.append(tk.Label(boardframe,text=num,relief=RIDGE,width=2,bg='#ffffff',border=2,height=1,fg='#0000ff'))
+            boardth.append(tk.Label(boardframe,text=num,relief=RIDGE,width=2,bg='#ffffff',border=2,height=1,fg='#0000ff'))
         except:
-            board.append(tk.Entry(boardframe,justify=CENTER,width=3,borderwidth=2,relief=RIDGE))
-    for bored in board:
-        x=(board.index(bored))%9+1
-        y=math.floor((board.index(bored)/9))+1
+            boardth.append(tk.Entry(boardframe,justify=CENTER,width=3,borderwidth=2,relief=RIDGE))
+    for bored in boardth:
+        x=(boardth.index(bored))%9+1
+        y=math.floor((boardth.index(bored)/9))+1
         vert=0
         horz=0
         if x%3==0:
@@ -137,6 +142,7 @@ def boardsetup(board,ogvalues):
     start_time=time.time()
     checkbutton.grid(row=0,column=7,columnspan=3)
     Title.grid(row=0,column=0,columnspan=10)
+    return boardth
 
 def getGridValues(board):
     variableValues=[]
@@ -156,6 +162,7 @@ def getGridValues(board):
                 print('Please finish the grid with values from 1 - 9')
                 break
     if len(variableValues)==81:
+        print(variableValues)
         return variableValues
     else:
         return None
@@ -197,9 +204,10 @@ def playAgain(event):
     startgame()
 
 def sortLists9(_9values): 
-    _9values.sort()
+    _9values.sort(reverse=False)
     goodList=[1,2,3,4,5,6,7,8,9]
     if _9values==goodList:
+        print('hi',True)
         return True
     else:
         return False
