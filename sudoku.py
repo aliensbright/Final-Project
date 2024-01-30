@@ -190,6 +190,8 @@ def checkAnswer(event):
                     break
         if check==True:
             print('Correct, You Win\n')
+            for i in board:
+                i.grid_forget()
             boardframe.grid_forget()
             board=[]
             YouWin.place(x=70,y=75)
